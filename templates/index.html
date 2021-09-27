@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Github visitor</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body, html{
+            width: 100%;
+            height: 100%
+        }
+        iframe{
+            width: 1000px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        {% for file in themes %}
+        <li>
+            {% set url = '_?theme=%s&active=ff0000&deactive=f1f1f1&len=-10' % file %}
+            <b>{{ file }}</b><input class="ipt" disabled data-v="{{ url }}"/>
+            <iframe src="{{ url }}"></iframe>
+        </li>
+        {% endfor %}
+    </ul>
+<script>
+document.querySelectorAll('input.ipt').forEach(el => {
+    console.log(location.origin + location.pathname + el.dataset.v)
+    el.value = location.origin + location.pathname + el.dataset.v
+})
+</script>
+</body>
+</html>

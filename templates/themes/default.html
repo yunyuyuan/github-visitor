@@ -1,0 +1,5 @@
+<svg xmlns='http://www.w3.org/2000/svg' width="{{ 13*(num | length) }}" height="24">
+{% for n in num %}
+    <text x="{{ 13*loop.index0 }}" y="20" font-size="20" fill="{{ active if n != -1 else deactive }}">{{ n | default_num_parser }}</text>
+{% endfor %}
+</svg>
