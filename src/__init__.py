@@ -37,8 +37,10 @@ def visitor(user):
         length = 8
     resp = render_template('visitor.html',
                            num=num_to_list(num, length),
+                           valid_len=len(str(num)),
                            theme=params.get('theme') or 'default',
                            active='#'+active,
                            deactive='#'+deactive,
+                           animate_speed=30,
                            ).strip()
     return Response(response=render_template('img.html', img='data:image/svg+xml,'+svg_encode(resp)))

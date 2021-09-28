@@ -1,5 +1,29 @@
 <svg xmlns='http://www.w3.org/2000/svg' width="{{ 13*(num | length) }}" height="24">
 {% for n in num %}
-    <text x="{{ 13*loop.index0 }}" y="20" font-size="20" fill="{{ active if n != -1 else deactive }}">{{ n | default_num_parser }}</text>
+    {% set pos_x = 13*loop.index0 %}
+    {% set idx = (num|length)-loop.index0 %}
+    {% set number = n | default_num_parser %}
+    {% if idx <= valid_len  %}
+        {% for num in [0,1,3,5,7,9,number] %}
+            {% set delay = (idx-1)*(7*animate_speed)  %}
+            {% if delay > 0 %}
+            {# 灰色的0 #}
+            <text x="{{ pos_x }}" y="20" font-size="20" fill="{{ deactive }}" visibility="hidden">
+            0
+            <set attributeName='visibility' to='visible' begin='0' dur='{{ delay }}ms'></set>
+            </text>
+            {% endif %}
+            {# 变化动画 #}
+            <text x="{{ pos_x }}" y="20" font-size="20" fill="{{ active if n != -1 else deactive }}" visibility="hidden">
+            {{ num }}
+            <set attributeName='visibility' to='visible' begin='{{ delay+loop.index0*animate_speed }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+            </text>
+        {% endfor %}
+    {% else %}
+        {# 无动画 #}
+        <text x="{{ pos_x }}" y="20" font-size="20" fill="{{ active if n != -1 else deactive }}">
+        {{ number }}
+        </text>
+    {% endif %}
 {% endfor %}
 </svg>
