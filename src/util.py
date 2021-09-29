@@ -19,6 +19,10 @@ def svg_encode(svg):
     return ' '.join(svg_enc.split())
 
 
+def list_join(lis: list, v):
+    return [*lis, v]
+
+
 def default_num_parser(num):
     return 0 if num == -1 else num
 
@@ -40,4 +44,4 @@ def digital_num_parser(num, idx):
         b = num in [0, 1, 2, 3, 4, 7, 8, 9]
     else:
         b = num in [2, 3, 4, 5, 6, 8, 9]
-    return 'active' if b else ''
+    return b

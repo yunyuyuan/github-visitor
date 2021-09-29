@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, Response
 from flask_cors import CORS
 from os import listdir
 from os.path import splitext, realpath
-from src.util import num_to_list, svg_encode, default_num_parser, digital_num_parser
+from src.util import num_to_list, svg_encode, default_num_parser, digital_num_parser, list_join
 from re import match
 
 app = Flask(__name__)
 CORS(app)
 app.template_folder = realpath('templates')
+app.add_template_filter(list_join)
 app.add_template_filter(default_num_parser)
 app.add_template_filter(digital_num_parser)
 
@@ -32,15 +33,32 @@ def visitor(user):
     else:
         pass
     try:
+        animate_speed = min(1000, abs(int(params.get('speed'))))
+    except:
+        animate_speed = 30
+    try:
         length = abs(int(params.get('len')))
     except:
         length = 8
+    try:
+        size = abs(int(params.get('size')))
+    except:
+        size = 36
+    try:
+        space = abs(int(params.get('space')))
+    except:
+        space = 10
     resp = render_template('visitor.html',
                            num=num_to_list(num, length),
                            valid_len=len(str(num)),
                            theme=params.get('theme') or 'default',
-                           active='#'+active,
-                           deactive='#'+deactive,
-                           animate_speed=30,
+                           active='#' + active,
+                           deactive='#' + deactive,
+                           animate_speed=max(30, animate_speed),
+                           fake_num=[0, 1, 3, 5, 7, 9],
+                           size=size,
+                           space=space,
                            ).strip()
-    return Response(response=render_template('img.html', img='data:image/svg+xml,'+svg_encode(resp)))
+    return Response(response=resp, headers={
+        'Content-Type': 'image/svg+xml'
+    })

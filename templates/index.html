@@ -12,9 +12,21 @@
             width: 100%;
             height: 100%
         }
-        iframe{
-            width: 1000px;
-            height: 400px;
+        ul{
+            width: 100%;
+        }
+        li{
+            
+        }
+        li b{
+            
+        }
+        li input{
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        li button{
+            
         }
     </style>
 </head>
@@ -22,15 +34,18 @@
     <ul>
         {% for file in themes %}
         <li>
-            {% set url = '_?theme=%s&active=ff0000&deactive=f1f1f1&len=-10' % file %}
-            <b>{{ file }}</b><input class="ipt" disabled data-v="{{ url }}"/>
-            <iframe src="{{ url }}"></iframe>
+            {% set url = '_?theme=%s&active=3200ff&deactive=f1f1f1&len=8&speed=40&size=40' % file %}
+            <div style="display: flex;width: 100%">
+                <b>{{ file }}</b>
+                <input class="ipt" disabled data-v="{{ url }}"/>
+                <button>copy</button>
+            </div>
+            <img src="{{ url }}"/>
         </li>
         {% endfor %}
     </ul>
 <script>
 document.querySelectorAll('input.ipt').forEach(el => {
-    console.log(location.origin + location.pathname + el.dataset.v)
     el.value = location.origin + location.pathname + el.dataset.v
 })
 </script>
