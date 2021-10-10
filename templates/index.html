@@ -3,51 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <title>Github visitor</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        body, html{
-            width: 100%;
-            height: 100%
-        }
-        ul{
-            width: 100%;
-        }
-        li{
-            
-        }
-        li b{
-            
-        }
-        li input{
-            flex-grow: 1;
-            margin: 0 20px;
-        }
-        li button{
-            
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}"/>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}"/>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 </head>
 <body>
+    <nav>
+        <form>
+            <label>
+                <b>Github账户:</b>
+                <input name="user" placeholder="_(下划线是无效账户，固定9527用于测试)"/>
+            </label>
+            <label>
+                <b>激活颜色:</b>
+                <input name="active" placeholder="3200ff"/>
+            </label>
+            <label>
+                <b>非激活颜色:</b>
+                <input name="deactive" placeholder="f1f1f1"/>
+            </label>
+            <label>
+                <b>数字长度:</b>
+                <input name="len" placeholder="8(前面会空出几个0)"/>
+            </label>
+            <label>
+                <b>动画速度:</b>
+                <input name="speed" placeholder="40"/>
+            </label>
+            <label>
+                <b>字体大小:</b>
+                <input name="size" placeholder="60"/>
+            </label>
+            <label>
+                <b>字体间距:</b>
+                <input name="space" placeholder="5"/>
+            </label>
+            <label>
+                <b>显示visitors:</b>
+                <input name="tail" placeholder="1(0或者1)"/>
+            </label>
+            <div>
+                <button type="button" onclick="applyParams()">应用</button>
+                <button type="button" onclick="resetParams()">恢复默认</button>
+            </div>
+        </form>
+    </nav>
     <ul>
         {% for file in themes %}
         <li>
-            {% set url = '_?theme=%s&active=3200ff&deactive=f1f1f1&len=8&speed=40&size=40' % file %}
-            <div style="display: flex;width: 100%">
+            {% set url = '_?theme=%s&active=3200ff&deactive=f1f1f1&len=8&speed=40&size=60&space=5&tail=1' % file %}
+            <label class="item" style="display: flex;width: 100%" data-file="{{ file }}">
                 <b>{{ file }}</b>
-                <input class="ipt" disabled data-v="{{ url }}"/>
-                <button>copy</button>
-            </div>
+                <input id="input-{{ file }}" class="ipt" readonly data-v="{{ url }}"/>
+                <button class="copy-btn" data-clipboard-target="#input-{{ file }}">复制</button>
+            </label>
             <img src="{{ url }}"/>
         </li>
         {% endfor %}
     </ul>
+</body>
 <script>
+document.querySelectorAll('button.copy-btn').forEach(el => {
+    const c = new ClipboardJS(el);
+    c.on('success', function (e) {
+      e.clearSelection();
+      el.innerHTML = '已复制!';
+      setTimeout(() => {
+          el.innerHTML = '复制';
+      }, 2000)
+    });
+})
 document.querySelectorAll('input.ipt').forEach(el => {
     el.value = location.origin + location.pathname + el.dataset.v
 })
+function applyParams(){
+    const form = new FormData(document.querySelector('form'))
+    const params = `&active=${form.get('active')||'3200ff'}&deactive=${form.get('deactive')||'f1f1f1'}&len=${form.get('len')||'8'}&speed=${form.get('speed')||'40'}&size=${form.get('size')||'60'}&space=${form.get('space')||'5'}&tail=${form.get('tail')||'0'}`
+    document.querySelectorAll('label.item').forEach(label => {
+        const url = location.origin + location.pathname+`${form.get('user')||'_'}?theme=${label.dataset.file}${params}`;
+        label.querySelector('input').value = url;
+        label.nextElementSibling.src = url;
+    })
+}
+function resetParams(){
+    document.querySelector('form').reset();
+    applyParams();
+}
 </script>
-</body>
 </html>

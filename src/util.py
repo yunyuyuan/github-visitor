@@ -5,20 +5,6 @@ def num_to_list(num, length):
     return lis
 
 
-def svg_encode(svg):
-    enc_chars = '"%#{}<>'
-    svg_enc = ''
-    for c in str(svg):
-        if c in enc_chars:
-            if c == '"':
-                svg_enc += "'"
-            else:
-                svg_enc += '%' + format(ord(c), "X")
-        else:
-            svg_enc += c
-    return ' '.join(svg_enc.split())
-
-
 def list_join(lis: list, v):
     return [*lis, v]
 

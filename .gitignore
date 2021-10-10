@@ -1,8 +1,14 @@
 .idea
 
-/__pycache__
+*/__pycache__
 *.pyc
 
 venv
 
 .DS_Store
+
+*/.sass-cache
+
+*.css.map
+
+config.py
