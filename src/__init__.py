@@ -61,6 +61,7 @@ def visitor(user):
     else:
         # 用户
         conn = mysql.connection
+        conn.ping(True)
         cursor = mysql.connection.cursor()
         db_user = user
         cursor.execute("select visitors from visitors where id=%s", (db_user,))
@@ -80,7 +81,9 @@ def visitor(user):
                         old_visitors = 0
                     except:
                         cursor.execute("select visitors from visitors where id=%s", (db_user,))
-                        old_visitors = cursor.fetchone()[0]
+                        v = cursor.fetchone()
+                        if v:
+                            old_visitors = v[0]
             if old_visitors is not None:
                 # 插入数据
                 num = old_visitors + 1
