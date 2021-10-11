@@ -5,7 +5,7 @@ from flask_cors import CORS
 from os import listdir
 from os.path import splitext, realpath
 
-from flask_mysqldb import MySQL
+from src.db import MySQL
 
 import config
 from src.util import num_to_list, default_num_parser, digital_num_parser, list_join
@@ -20,11 +20,13 @@ app.add_template_filter(list_join)
 app.add_template_filter(default_num_parser)
 app.add_template_filter(digital_num_parser)
 
-app.config['MYSQL_HOST'] = config.db_host
-app.config['MYSQL_USER'] = config.db_user
-app.config['MYSQL_PASSWORD'] = config.db_pwd
-app.config['MYSQL_PORT'] = config.db_port
-app.config['MYSQL_DB'] = config.db_db
+app.config['pymysql_kwargs'] = {
+    'host': config.db_host,
+    'port': config.db_port,
+    'passwd': config.db_pwd,
+    'user': config.db_user,
+    'database': config.db_db,
+}
 
 themes_file = list(map(lambda file: splitext(file)[0], listdir('templates/themes')))
 mysql = MySQL(app)

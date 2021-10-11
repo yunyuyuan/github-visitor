@@ -3,12 +3,11 @@ charset-normalizer==2.0.6
 click==8.0.3
 Flask==2.0.2
 Flask-Cors==3.0.10
-Flask-MySQLdb==0.2.0
 idna==3.2
 itsdangerous==2.0.1
 Jinja2==3.0.2
 MarkupSafe==2.0.1
-mysqlclient==2.0.3
+PyMySQL==1.0.2
 requests==2.26.0
 six==1.16.0
 urllib3==1.26.7
