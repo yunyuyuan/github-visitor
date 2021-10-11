@@ -78,7 +78,7 @@ document.querySelectorAll('input.ipt').forEach(el => {
 })
 function applyParams(){
     const form = new FormData(document.querySelector('form'))
-    const params = `&active=${form.get('active')||'3200ff'}&deactive=${form.get('deactive')||'f1f1f1'}&len=${form.get('len')||'8'}&speed=${form.get('speed')||'40'}&size=${form.get('size')||'60'}&space=${form.get('space')||'5'}&tail=${form.get('tail')||'0'}`
+    const params = `&active=${form.get('active')||'3200ff'}&deactive=${form.get('deactive')||'f1f1f1'}&len=${form.get('len')||'8'}&speed=${form.get('speed')||'40'}&size=${form.get('size')||'60'}&space=${form.get('space')||'5'}&tail=${form.get('tail')||'1'}`
     document.querySelectorAll('label.item').forEach(label => {
         const url = location.origin + location.pathname+`${form.get('user')||'_'}?theme=${label.dataset.file}${params}`;
         label.querySelector('input').value = url;
