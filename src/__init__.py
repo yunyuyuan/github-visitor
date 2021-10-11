@@ -47,7 +47,7 @@ def visitor(user):
     referer = sub('^(.*?)/?$', '\\1', request.headers.get('referer', default=''))
     if not (user == '_' or
             referer in [config.domain, 'http://127.0.0.1:5000'] or
-            match(f'^https://github\.com/{user}.*?$', referer)
+            not match(f'^https://github\.com/{user}.*?$', referer)
     ):
         return abort(403)
     params = request.args
