@@ -41,6 +41,11 @@ def index():
 
 @app.route('/<user>', methods=['get'])
 def visitor(user):
+    params = request.args
+    # theme不存在
+    theme = params.get('theme') or 'default'
+    if theme not in themes_file:
+        return abort(403)
     # user名不合规
     if not match('^[a-zA-Z\d-]*$', user) and user != '_':
         return abort(403)
@@ -50,7 +55,6 @@ def visitor(user):
             not match(f'^https://github\.com/{user}.*?$', referer)
     ):
         return abort(403)
-    params = request.args
     active = params.get('active') or ''
     active = active if match('^[0-9a-zA-Z]{6}$', active) else '000000'
     deactive = params.get('deactive') or ''
@@ -118,7 +122,7 @@ def visitor(user):
                            num=num_list,
                            show_tail=show_tail,
                            valid_len=len(str(num)),
-                           theme=params.get('theme') or 'default',
+                           theme=theme,
                            active='#' + active,
                            deactive='#' + deactive,
                            animate_speed=max(30, animate_speed),
