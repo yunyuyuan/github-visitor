@@ -1,6 +1,5 @@
 from threading import Event
 
-import MySQLdb
 from flask import Flask, render_template, request, Response, abort
 from flask_cors import CORS
 from os import listdir
