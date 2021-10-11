@@ -41,9 +41,14 @@ def index():
 
 @app.route('/<user>', methods=['get'])
 def visitor(user):
+    # user名不合规
     if not match('^[a-zA-Z\d-]*$', user) and user != '_':
         return abort(403)
-    if user != '_' and sub('^(.*?)/?$', '\\1', request.headers.get('referer', default='')) not in [f'https://github.com/{user}', config.domain, 'http://127.0.0.1:5000']:
+    referer = sub('^(.*?)/?$', '\\1', request.headers.get('referer', default=''))
+    if not (user == '_' or
+            referer in [config.domain, 'http://127.0.0.1:5000'] or
+            match(f'^https://github\.com/{user}.*?$', referer)
+    ):
         return abort(403)
     params = request.args
     active = params.get('active') or ''
