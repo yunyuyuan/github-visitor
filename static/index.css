@@ -47,6 +47,7 @@ nav {
       width: 400px; }
   nav div {
     display: flex;
+    justify-content: center;
     align-items: center; }
     nav div button:last-of-type {
       margin-left: 20px; }
