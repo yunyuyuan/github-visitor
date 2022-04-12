@@ -5,8 +5,6 @@ from flask_cors import CORS
 from os import listdir
 from os.path import splitext, realpath
 
-from src.db import MySQL
-
 import config
 from src.util import num_to_list, default_num_parser, digital_num_parser, list_join
 from re import match, sub
@@ -20,19 +18,37 @@ app.add_template_filter(list_join)
 app.add_template_filter(default_num_parser)
 app.add_template_filter(digital_num_parser)
 
-app.config['pymysql_kwargs'] = {
-    'host': config.db_host,
-    'port': config.db_port,
-    'passwd': config.db_pwd,
-    'user': config.db_user,
-    'database': config.db_db,
-}
-
 themes_file = list(map(lambda file: splitext(file)[0], listdir('templates/themes')))
-mysql = MySQL(app)
-lock = Event()
-lock.set()
+import sqlite3
+from flask import g
 
+DATABASE = './database.db'
+
+def get_lock():
+    lock = getattr(g, '_lock', None)
+    if lock is None:
+        lock = g._lock = Event() 
+        lock.set()
+    return lock
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchone()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
 
 @app.route('/', methods=['get'])
 def index():
@@ -50,9 +66,10 @@ def visitor(user):
     if not match('^[a-zA-Z\d-]*$', user) and user != '_':
         return abort(403)
     referer = sub('^(.*?)/?$', '\\1', request.headers.get('referer', default=''))
+    from_github = match(f'^https://github\.com/{user}.*?$', referer)
     if not (user == '_' or
             referer in [config.domain, 'http://127.0.0.1:5000'] or
-            not match(f'^https://github\.com/{user}.*?$', referer)
+            not from_github
     ):
         return abort(403)
     active = params.get('active') or ''
@@ -63,13 +80,10 @@ def visitor(user):
     if user == '_':
         num = 9527
     else:
+        lock = get_lock()
         # 用户
-        conn = mysql.connection
-        conn.ping(True)
-        cursor = mysql.connection.cursor()
         db_user = user
-        cursor.execute("select visitors from visitors where id=%s", (db_user,))
-        v = cursor.fetchone()
+        v = query_db("select visitors from visitors where id=?", (db_user,))
         old_visitors = None
         lock_v = lock.wait(10)
         if lock_v:
@@ -81,18 +95,23 @@ def visitor(user):
                 if result.status_code == 200:
                     # 新增数据
                     try:
-                        cursor.execute("insert into visitors (id,visitors,last_view) values (%s, 0, current_date )", (db_user,))
+                        db = get_db()
+                        cur = db.execute("insert into visitors (id,visitors,last_view) values (?, 0, current_date )", (db_user,))
+                        db.commit()
+                        cur.close()
                         old_visitors = 0
                     except:
-                        cursor.execute("select visitors from visitors where id=%s", (db_user,))
-                        v = cursor.fetchone()
+                        v = query_db("select visitors from visitors where id=?", (db_user,))
                         if v:
                             old_visitors = v[0]
             if old_visitors is not None:
-                # 插入数据
                 num = old_visitors + 1
-                cursor.execute("update visitors set visitors=%s,last_view=current_date where id=%s", (num, db_user))
-            conn.commit()
+                if from_github:
+                    # 插入数据
+                    db = get_db()
+                    cur = db.execute("update visitors set visitors=?,last_view=current_date where id=?", (num, db_user))
+                    db.commit()
+                    cur.close()
             lock.set()
 
     try:
