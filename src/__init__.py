@@ -66,10 +66,11 @@ def visitor(user):
     if not match('^[a-zA-Z\d-]*$', user) and user != '_':
         return abort(403)
     referer = sub('^(.*?)/?$', '\\1', request.headers.get('referer', default=''))
-    from_github = match(f'^https://github\.com/{user}.*?$', referer)
+    user_agent = sub('^(.*?)/?$', '\\1', request.headers.get('User-Agent', default=''))
+    from_github = match(f'^https://github\.com/{user}.*?$', referer) or match(f'^github-camo.*?$', user_agent)
     if not (user == '_' or
             referer in [config.domain, 'http://127.0.0.1:5000'] or
-            not from_github
+            from_github
     ):
         return abort(403)
     active = params.get('active') or ''
