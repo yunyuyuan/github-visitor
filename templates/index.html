@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Github visitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}"/>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}"/>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+    <style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+</head>
+<body>
+    <a target="_blank" href="https://github.com/yunyuyuan/github-visitor" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+    <nav>
+        <form>
+            <label>
+                <b>Github账户:</b>
+                <input name="user" placeholder="_(下划线是无效账户，固定9527用于测试)"/>
+            </label>
+            <label>
+                <b>激活颜色:</b>
+                <input name="active" placeholder="3200ff"/>
+            </label>
+            <label>
+                <b>非激活颜色:</b>
+                <input name="deactive" placeholder="f1f1f1"/>
+            </label>
+            <label>
+                <b>数字长度:</b>
+                <input name="len" placeholder="8(前面会空出几个0)"/>
+            </label>
+            <label>
+                <b>动画速度:</b>
+                <input name="speed" placeholder="40"/>
+            </label>
+            <label>
+                <b>字体大小:</b>
+                <input name="size" placeholder="60"/>
+            </label>
+            <label>
+                <b>字体间距:</b>
+                <input name="space" placeholder="5"/>
+            </label>
+            <label>
+                <b>显示visitors:</b>
+                <input name="tail" placeholder="1(0或者1)"/>
+            </label>
+            <div>
+                <button type="button" onclick="applyParams()">应用</button>
+                <button type="button" onclick="resetParams()">恢复默认</button>
+            </div>
+        </form>
+    </nav>
+    <ul>
+        {% for file in themes %}
+        <li>
+            {% set url = '_?theme=%s&active=3200ff&deactive=f1f1f1&len=8&speed=40&size=60&space=5&tail=1' % file %}
+            <label class="item" style="display: flex;width: 100%" data-file="{{ file }}">
+                <b>{{ file }}</b>
+                <input id="input-{{ file }}" class="ipt" readonly data-v="{{ url }}"/>
+                <button class="copy-btn" data-clipboard-target="#input-{{ file }}">复制</button>
+            </label>
+            <img src="{{ url }}"/>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+<script>
+document.querySelectorAll('button.copy-btn').forEach(el => {
+    const c = new ClipboardJS(el);
+    c.on('success', function (e) {
+      e.clearSelection();
+      el.innerHTML = '已复制!';
+      setTimeout(() => {
+          el.innerHTML = '复制';
+      }, 2000)
+    });
+})
+document.querySelectorAll('input.ipt').forEach(el => {
+    el.value = location.origin + location.pathname + el.dataset.v
+})
+function applyParams(){
+    const form = new FormData(document.querySelector('form'))
+    const params = `&active=${form.get('active')||'3200ff'}&deactive=${form.get('deactive')||'f1f1f1'}&len=${form.get('len')||'8'}&speed=${form.get('speed')||'40'}&size=${form.get('size')||'60'}&space=${form.get('space')||'5'}&tail=${form.get('tail')||'1'}`
+    document.querySelectorAll('label.item').forEach(label => {
+        const url = location.origin + location.pathname+`${form.get('user')||'_'}?theme=${label.dataset.file}${params}`;
+        label.querySelector('input').value = url;
+        label.nextElementSibling.src = url;
+    })
+}
+function resetParams(){
+    document.querySelector('form').reset();
+    applyParams();
+}
+</script>
+</html>

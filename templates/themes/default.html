@@ -1,0 +1,39 @@
+<svg xmlns='http://www.w3.org/2000/svg' width="{{ ((size/2+space)*(num | length))| int + (45 if show_tail else 0) }}" height="{{ size }}">
+<g>
+<style>
+    .n{
+        font-family: cursive;
+        line-height: {{ size }}px;
+        font-size: {{ size }}px;
+    }
+</style>
+{% for n in num %}
+    {% set pos_x = ((size/2+space)*loop.index0)|int %}
+    {% set idx = (num|length)-loop.index0 %}
+    {% set number = n | default_num_parser %}
+    {% if idx <= valid_len  %}
+        {% set delay = (idx-1)*(7*animate_speed)  %}
+        {% for f_num in fake_num | list_join(number) %}
+            {% if delay > 0 %}
+            {# 灰色的0 #}
+            <text class="n" x="{{ pos_x }}" y="85%" fill="{{ deactive }}" visibility="hidden">
+            0
+            <set attributeName='visibility' to='visible' begin='0' dur='{{ delay }}ms'></set>
+            </text>
+            {% endif %}
+            {# 变化动画 #}
+            <text class="n" x="{{ pos_x }}" y="85%" fill="{{ active if n != -1 else deactive }}" visibility="hidden">
+            {{ f_num }}
+            <set attributeName='visibility' to='visible' begin='{{ delay+loop.index0*animate_speed }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+            </text>
+        {% endfor %}
+    {% else %}
+        {# 无动画 #}
+        <text class="n" x="{{ pos_x }}" y="85%" fill="{{ active if n != -1 else deactive }}">
+        {{ number }}
+        </text>
+    {% endif %}
+{% endfor %}
+</g>
+{% include 'fragment/visitors.html' with context %}
+</svg>

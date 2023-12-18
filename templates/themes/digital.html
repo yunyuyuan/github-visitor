@@ -1,0 +1,104 @@
+<svg xmlns='http://www.w3.org/2000/svg' width="{{ ((size/2+space)*(num | length))|int + (45 if show_tail else 0)}}" height="{{ size }}">
+<g>
+<style>
+    use{
+        fill: {{ deactive }};
+    }
+    use.active{
+        fill: {{ active }};
+    }
+</style>
+<g style="transform: translateY(100%)">
+<path id="p1" d="M207.7,754.5c-38.2,0-76.3-0.1-114.5,0.1c-4.3,0-7.5-1.2-10.5-4.4c-9.3-9.7-19-19.1-28.5-28.7c-4.2-4.2-4.3-5.9-0.2-9.9
+            c10.1-10.2,20.2-20.4,30.5-30.3c1.7-1.6,4.6-2.9,7-2.9c77.5-0.1,155-0.1,232.4,0c2.3,0,5.2,1.2,6.9,2.9
+            c10.4,10.1,20.5,20.5,30.9,30.6c3.4,3.3,3.2,6-0.1,9.2c-10.1,9.9-19.9,20.2-30.2,29.9c-2.1,2-5.8,3.4-8.7,3.4
+            C284.3,754.6,246,754.5,207.7,754.5z">
+</path>
+<path id="p2" d="M207.8,76.2c-38.3,0-76.6-0.1-115,0.1c-4,0-6.9-1.2-9.6-4.1c-9.5-9.8-19.3-19.4-28.9-29.1c-4.3-4.4-4.3-5.9,0-10.3
+            C64.1,23,73.9,13,84,3.3c1.9-1.8,5.2-3.2,7.8-3.2C169,0,246.1,0,323.3,0.1c2.8,0,6.2,1.5,8.2,3.4c10.1,9.7,19.9,19.7,29.8,29.6
+            c4.3,4.3,4.2,5.5-0.1,9.8c-9.9,9.9-19.9,19.7-29.6,29.8c-2.5,2.6-5.2,3.5-8.8,3.5C284.4,76.2,246.1,76.2,207.8,76.2z">
+</path>
+<path id="p3" d="M415.3,546.7c0,38.3-0.1,76.6,0.1,114.9c0,4-1.2,6.9-4.1,9.6c-9.8,9.5-19.3,19.3-29,28.9c-4.5,4.5-5.9,4.5-10.3,0.1
+            c-10-10-20.1-19.9-29.9-30.1c-1.6-1.7-2.9-4.6-2.9-6.9c-0.1-77.6-0.1-155.2,0-232.8c0-2.4,1.2-5.3,2.8-7
+            c9.9-10.3,20.1-20.4,30.3-30.5c4-4,5.5-4,9.5,0c10,10,20,20.1,30.1,30c2.6,2.6,3.5,5.3,3.5,8.9
+            C415.3,470.1,415.3,508.4,415.3,546.7z">
+</path>
+<path id="p4" d="M0.1,546.8c0-38.1,0.1-76.3-0.1-114.4c0-4.3,1.2-7.5,4.4-10.5c9.7-9.4,19.1-19,28.7-28.6c4.4-4.3,5.7-4.4,9.9-0.2
+            c10.2,10.1,20.4,20.1,30.3,30.5c1.7,1.8,3,4.9,3,7.4c0.2,77.3,0.2,154.6,0,231.8c0,2.5-1.3,5.6-3,7.4
+            c-9.9,10.3-20.1,20.4-30.3,30.5c-3.9,3.9-5.6,3.9-9.6,0C23.5,690.9,13.9,681,4,671.4c-2.9-2.8-4-5.7-3.9-9.7
+            C0.1,623.4,0.1,585.1,0.1,546.8z">
+</path>
+<path id="p5" d="M0.1,207.6c0-38.1,0.1-76.3-0.1-114.4c0-4.3,1.2-7.5,4.4-10.5c9.7-9.3,19.1-19,28.7-28.5c4.3-4.3,5.8-4.3,9.9-0.3
+            C53.1,64,63.3,74,73.2,84.4c1.7,1.8,2.9,4.9,2.9,7.4c0.2,77.3,0.2,154.6,0,231.8c0,2.5-1.3,5.6-3,7.4
+            c-9.9,10.3-20.1,20.4-30.3,30.5c-4,4-5.5,4-9.5,0c-9.8-9.7-19.5-19.6-29.4-29.3c-2.9-2.8-4-5.7-4-9.7
+            C0.1,284.2,0.1,245.9,0.1,207.6z">
+</path>
+<path id="p6" d="M415.3,207.9c0,38.1,0,76.3,0.1,114.4c0,4-1.1,6.9-3.9,9.7c-9.9,9.6-19.6,19.5-29.4,29.3c-4.3,4.2-5.7,4.3-9.9,0.1
+            c-10-10-20.1-19.9-29.9-30.1c-1.7-1.8-3-4.9-3-7.4c-0.2-77.4-0.2-154.9,0-232.3c0-2.4,1.1-5.3,2.7-7c10-10.4,20.4-20.5,30.6-30.9
+            c3.3-3.4,6-3.3,9.3,0C391.9,64,402.4,74,412.4,84.5c1.8,1.9,2.8,5.3,2.8,8C415.4,131,415.3,169.4,415.3,207.9z">
+</path>
+<path id="p7" d="M207.3,415.3c-38.2,0-76.3,0-114.5,0.1c-3.9,0-6.9-1-9.7-3.9c-9.6-9.9-19.5-19.6-29.3-29.4c-3.9-3.9-3.9-5.7-0.1-9.6
+            C64,362.3,74,352.1,84.3,342.2c1.7-1.6,4.6-2.9,6.9-2.9c77.6-0.1,155.3-0.1,232.9,0c2.2,0,4.9,1.2,6.5,2.7
+            c10.5,10.2,20.8,20.7,31.2,31c3,3,3.1,5.5,0.1,8.5c-10.5,10.4-20.9,21.1-31.6,31.3c-1.7,1.7-5,2.4-7.6,2.4
+            C284.3,415.4,245.8,415.3,207.3,415.3z">
+</path>
+</g>
+    {% for n in num %}
+        {% set idx = (num|length)-loop.index0 %}
+        {% set has_animate = idx <= valid_len  %}
+        {% set delay = (idx-1)*(7*animate_speed)  %}
+        <svg x="{{ ((size/2+space)*loop.index0)|int }}" y="0" width="{{ (size*0.45) | int }}" xmlns='http://www.w3.org/2000/svg' viewBox="0 0 415.4 754.6">
+          <use class="b" href="#p1">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(0)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="t" href="#p2">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(1)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="br" href="#p3">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(2)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="bl" href="#p4">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(3)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="tl" href="#p5">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(4)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="tr" href="#p6">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(5)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+          <use class="c" href="#p7">
+              {% if has_animate %}
+                  {% for f_num in fake_num | list_join(n) %}
+                    <set attributeName='class' to='b {{ 'active' if (f_num | digital_num_parser(6)) else '' }}' begin='{{ delay+animate_speed*loop.index0 }}ms' dur='{{ '' if loop.last else animate_speed|string+'ms' }}'></set>
+                  {% endfor %}
+              {% endif %}
+          </use>
+        </svg>
+    {% endfor %}
+</g>
+{% include 'fragment/visitors.html' with context %}
+</svg>
