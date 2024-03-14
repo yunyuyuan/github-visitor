@@ -50,6 +50,10 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+@app.route('/test', methods=['get'])
+def test():
+    return "OK"
+
 @app.route('/', methods=['get'])
 def index():
     return render_template('index.html', themes=themes_file)
