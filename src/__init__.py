@@ -161,6 +161,7 @@ def visitor(user):
                            fake_num=[0, 1, 3, 5, 7, 9],
                            size=size,
                            space=space,
+                           visitor_width=55,
                            ).strip()
     return Response(response=resp, headers={
         'Content-Type': 'image/svg+xml',
