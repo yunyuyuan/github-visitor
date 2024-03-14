@@ -2,10 +2,11 @@ from threading import Event
 
 from flask import Flask, render_template, request, Response, abort
 from flask_cors import CORS
-from os import listdir
+from os import listdir, environ
 from os.path import splitext, realpath
 
-import config
+import psycopg2
+
 from src.util import num_to_list, default_num_parser, digital_num_parser, list_join
 from re import match, sub
 from requests import get
@@ -19,10 +20,10 @@ app.add_template_filter(default_num_parser)
 app.add_template_filter(digital_num_parser)
 
 themes_file = list(map(lambda file: splitext(file)[0], listdir('templates/themes')))
-import sqlite3
+# import sqlite3
 from flask import g
 
-DATABASE = './database.db'
+# DATABASE = './database.db'
 
 def get_lock():
     lock = getattr(g, '_lock', None)
@@ -34,7 +35,15 @@ def get_lock():
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
+        # db = g._database = sqlite3.connect(DATABASE)
+        db = g._database = psycopg2.connect(
+			host = environ.get('POSTGRES_HOST'),
+			dbname = environ.get('POSTGRES_DATABASE'),
+			user = environ.get('POSTGRES_USER'),
+			password = environ.get('POSTGRES_PASSWORD'),
+			port = environ.get('POSTGRES_PORT'),
+		)
+
     return db
 
 @app.teardown_appcontext
@@ -49,10 +58,6 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchone()
     cur.close()
     return (rv[0] if rv else None) if one else rv
-
-@app.route('/test', methods=['get'])
-def test():
-    return "OK"
 
 @app.route('/', methods=['get'])
 def index():
@@ -73,7 +78,7 @@ def visitor(user):
     user_agent = sub('^(.*?)/?$', '\\1', request.headers.get('User-Agent', default=''))
     from_github = match(f'^https://github\.com/{user}.*?$', referer) or match(f'^github-camo.*?$', user_agent)
     if not (user == '_' or
-            referer in [config.domain, 'http://127.0.0.1:5000'] or
+            referer in [environ.get('HOME_DOMAIN'), 'http://127.0.0.1:5000'] or
             from_github
     ):
         return abort(403)
@@ -101,7 +106,8 @@ def visitor(user):
                     # 新增数据
                     try:
                         db = get_db()
-                        cur = db.execute("insert into visitors (id,visitors,last_view) values (?, 0, current_date )", (db_user,))
+                        cur = db.cursor()
+                        cur.execute("insert into visitors (id,visitors,last_view) values (?, 0, current_date )", (db_user,))
                         db.commit()
                         cur.close()
                         old_visitors = 0
@@ -114,7 +120,8 @@ def visitor(user):
                 if from_github:
                     # 插入数据
                     db = get_db()
-                    cur = db.execute("update visitors set visitors=?,last_view=current_date where id=?", (num, db_user))
+                    cur = db.cursor()
+                    cur.execute("update visitors set visitors=?,last_view=current_date where id=?", (num, db_user))
                     db.commit()
                     cur.close()
             lock.set()
