@@ -94,7 +94,7 @@ def visitor(user):
         lock = get_lock()
         # 用户
         db_user = user
-        v = query_db("select visitors from visitors where id=?", (db_user,))
+        v = query_db("select visitors from visitors where id=%s", (db_user,))
         old_visitors = None
         lock_v = lock.wait(10)
         if lock_v:
@@ -108,12 +108,12 @@ def visitor(user):
                     try:
                         db = get_db()
                         cur = db.cursor()
-                        cur.execute("insert into visitors (id,visitors,last_view) values (?, 0, current_date )", (db_user,))
+                        cur.execute("insert into visitors (id,visitors,last_view) values (%s, 0, current_date )", (db_user,))
                         db.commit()
                         cur.close()
                         old_visitors = 0
                     except:
-                        v = query_db("select visitors from visitors where id=?", (db_user,))
+                        v = query_db("select visitors from visitors where id=%s", (db_user,))
                         if v:
                             old_visitors = v[0]
             if old_visitors is not None:
@@ -122,7 +122,7 @@ def visitor(user):
                     # 插入数据
                     db = get_db()
                     cur = db.cursor()
-                    cur.execute("update visitors set visitors=?,last_view=current_date where id=?", (num, db_user))
+                    cur.execute("update visitors set visitors=%s,last_view=current_date where id=%s", (num, db_user))
                     db.commit()
                     cur.close()
             lock.set()
